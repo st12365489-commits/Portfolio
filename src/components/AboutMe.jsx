@@ -24,16 +24,7 @@ export default function AboutMe({ onMoreAboutMe }) {
         </button>
 
         {/* Miniature Portrait Artwork matching reference */}
-        <div className="about-portrait-wrap">
-          <img
-            src="/images/profile.svg"
-            alt="Suraj Thakur creative illustration"
-            className="about-portrait-img"
-            width="220"
-            height="240"
-            loading="lazy"
-          />
-        </div>
+
       </div>
     </div>
   )

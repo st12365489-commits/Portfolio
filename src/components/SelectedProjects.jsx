@@ -8,7 +8,7 @@ function ProjectCard({ project, onSelectProject }) {
     if (videoRef.current) {
       const playPromise = videoRef.current.play()
       if (playPromise !== undefined) {
-        playPromise.catch(() => {})
+        playPromise.catch(() => { })
       }
     }
   }
@@ -99,30 +99,12 @@ export default function SelectedProjects({ onSelectProject }) {
         <div className="projects-header">
           <div className="projects-title-wrap">
             <h2 className="projects-title">
-              SELECTED PROJECTS<span className="yellow-dot">.</span>
-              <svg
-                className="title-highlight-loop"
-                viewBox="0 0 420 50"
-                preserveAspectRatio="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M 10 25 C 80 5, 340 5, 410 25 C 415 38, 320 48, 120 45 C 30 42, 5 30, 25 15"
-                  stroke="#F7B62D"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  fill="none"
-                />
-              </svg>
+              SELECTED PROJECTS
+
             </h2>
           </div>
 
           <div className="projects-header-info">
-            <p className="projects-header-copy">
-              A collection of videos across different styles and formats.
-              <br className="desktop-br" />
-              Edited specifically in 9:16 vertical format for high retention.
-            </p>
             <a
               href="#category-01"
               className="view-all-link"
@@ -178,9 +160,8 @@ export default function SelectedProjects({ onSelectProject }) {
 
               {/* Projects Grid / Cards Column */}
               <div
-                className={`category-cards-grid vertical-cards-grid ${
-                  category.projects.length === 1 ? 'single-card-grid' : 'dual-card-grid'
-                }`}
+                className={`category-cards-grid vertical-cards-grid ${category.projects.length === 1 ? 'single-card-grid' : 'dual-card-grid'
+                  }`}
               >
                 {category.projects.map((project) => (
                   <ProjectCard

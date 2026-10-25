@@ -13,7 +13,7 @@ export const siteConfig = {
   supportingCopy:
     "I turn ideas into engaging videos that inform, inspire and leave a lasting impact.",
   bio: "I'm a video editor passionate about storytelling. I turn raw footage into meaningful, engaging videos that connect with people. My focus is on rhythm, emotion, visual flow and clear storytelling across documentary, educational and creative projects.",
-  email: "surajthakur.edits@gmail.com",
+  email: "st12365489@gmail.com",
   socialLinks: [
     {
       name: "LinkedIn",
@@ -24,7 +24,7 @@ export const siteConfig = {
   ],
   showreel: {
     title: "Suraj Thakur — 2026 Director's Cut Showreel",
-    duration: "01:45",
+    duration: "00:45",
     videoUrl: "/videos/modi_gold.mp4",
     thumbnail: "/images/profile.svg",
     aspectRatio: "9/16",
@@ -83,7 +83,7 @@ export const projectCategories = [
         id: "doc-1",
         title: "Gold vs Economy: The Hidden Cost of Gold Imports",
         categoryLabel: "Explainer Video · Motion Graphics",
-        duration: "02:16",
+        duration: "00:57",
         thumbnail: "/images/documentary-1.svg",
         videoUrl: "/videos/modi_gold.mp4",
         aspectRatio: "9/16",
@@ -95,7 +95,7 @@ export const projectCategories = [
         id: "doc-2",
         title: "The Hidden Cost of AI",
         categoryLabel: "Documentary Style · Visual Storytelling",
-        duration: "03:42",
+        duration: "00:37",
         thumbnail: "/images/documentary-2.svg",
         videoUrl: "/videos/Video-26113.mp4",
         aspectRatio: "9/16",
@@ -153,7 +153,7 @@ export const projectCategories = [
         id: "ai-1",
         title: "Managerial Bloat Crisis",
         categoryLabel: "AI Visuals · Compositing",
-        duration: "03:36",
+        duration: "00.29",
         thumbnail: "/images/ai-motion-graphics.svg",
         videoUrl: "/videos/IMG_7968.MP4",
         aspectRatio: "9/16",
