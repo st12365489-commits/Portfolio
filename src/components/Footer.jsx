@@ -49,20 +49,22 @@ export default function Footer() {
             © {CURRENT_YEAR} {siteConfig.name}. All rights reserved. Designed with editorial passion.
           </p>
 
-          <div className="footer-socials" aria-label="Footer Social Links">
-            {siteConfig.socialLinks.map((social) => (
-              <a
-                key={social.id}
-                href={social.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="footer-social-link"
-                aria-label={social.ariaLabel}
-              >
-                {social.name}
-              </a>
-            ))}
-          </div>
+          {siteConfig.socialLinks && siteConfig.socialLinks.length > 0 && (
+            <div className="footer-socials" aria-label="Footer Social Links">
+              {siteConfig.socialLinks.map((social) => (
+                <a
+                  key={social.id}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-social-link"
+                  aria-label={social.ariaLabel}
+                >
+                  {social.name}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </footer>

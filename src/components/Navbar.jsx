@@ -61,7 +61,8 @@ export default function Navbar({ onOpenContact }) {
     const targetId = href.replace('#', '')
     const targetElement = document.getElementById(targetId)
     if (targetElement) {
-      const navHeight = 80
+      const headerEl = document.querySelector('.site-header')
+      const navHeight = headerEl ? headerEl.offsetHeight : 72
       const elementPosition = targetElement.getBoundingClientRect().top
       const offsetPosition = elementPosition + window.pageYOffset - navHeight
 

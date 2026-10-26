@@ -1,57 +1,258 @@
-import React from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { siteConfig } from '../data/projects'
 
-export default function ContactSection({ onOpenContact }) {
+export default function ContactModal({ isOpen, onClose }) {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    projectType: 'Documentary & Explainer',
+    message: '',
+  })
+  const [isCopied, setIsCopied] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const modalRef = useRef(null)
+  const previousFocusRef = useRef(null)
+
+  // Prevent background scroll and trap initial focus
+  useEffect(() => {
+    if (isOpen) {
+      previousFocusRef.current = document.activeElement
+      document.body.style.overflow = 'hidden'
+
+      setTimeout(() => {
+        const closeBtn = modalRef.current?.querySelector('.modal-close-btn')
+        closeBtn?.focus()
+      }, 50)
+    } else {
+      document.body.style.overflow = ''
+      if (previousFocusRef.current) {
+        previousFocusRef.current.focus()
+      }
+    }
+
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [isOpen])
+
+  const handleClose = React.useCallback(() => {
+    setIsSubmitted(false)
+    setIsCopied(false)
+    onClose()
+  }, [onClose])
+
+  // ESC key and Tab trapping
+  useEffect(() => {
+    if (!isOpen) return
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        handleClose()
+      }
+
+      if (e.key === 'Tab') {
+        const focusable = modalRef.current?.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        )
+        if (!focusable || focusable.length === 0) return
+
+        const firstElement = focusable[0]
+        const lastElement = focusable[focusable.length - 1]
+
+        if (e.shiftKey && document.activeElement === firstElement) {
+          e.preventDefault()
+          lastElement.focus()
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+          e.preventDefault()
+          firstElement.focus()
+        }
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, handleClose])
+
+  if (!isOpen) return null
+
+  const handleBackdropClick = (e) => {
+    if (e.target === e.currentTarget) {
+      handleClose()
+    }
+  }
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const buildMailtoUrl = () => {
+    const subject = encodeURIComponent(
+      `[Project Inquiry] ${formData.projectType} — ${formData.name || 'Client'}`
+    )
+    const body = encodeURIComponent(
+      `Hi Suraj,\n\nName: ${formData.name}\nEmail: ${formData.email}\nProject Type: ${formData.projectType}\n\nProject Details:\n${formData.message}\n\nLooking forward to collaborating!`
+    )
+    return `mailto:${siteConfig.email}?subject=${subject}&body=${body}`
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    setIsSubmitted(true)
+    window.location.href = buildMailtoUrl()
+  }
+
+  const handleCopyInquiry = () => {
+    const text = `To: ${siteConfig.email}\nSubject: [Project Inquiry] ${formData.projectType} — ${formData.name}\n\nName: ${formData.name}\nEmail: ${formData.email}\nProject Type: ${formData.projectType}\n\nMessage:\n${formData.message}`
+    navigator.clipboard.writeText(text).then(() => {
+      setIsCopied(true)
+      setTimeout(() => setIsCopied(false), 2500)
+    })
+  }
+
   return (
-    <div id="contact" className="contact-block" aria-label="Contact Section">
-      {/* Hand-drawn yellow accent strokes above heading */}
-      <div className="contact-accents" aria-hidden="true">
-        <svg viewBox="0 0 60 20" width="50" height="18" fill="none">
-          <path d="M 8 16 L 36 4" stroke="#F7B62D" strokeWidth="3.5" strokeLinecap="round" />
-          <path d="M 22 18 L 48 6" stroke="#F7B62D" strokeWidth="3" strokeLinecap="round" />
-        </svg>
-      </div>
-
-      <h3 className="contact-heading">
-        Let’s
-        <br />
-        Work Together<span className="yellow-dot">.</span>
-      </h3>
-
-      <p className="contact-copy">
-        Have a project in mind or just want to say hello? I’d love to hear from you.
-      </p>
-
-      {/* Primary CTA */}
-      <div className="contact-action-wrap">
-        <button
-          type="button"
-          className="btn-primary btn-send-message"
-          onClick={onOpenContact}
-          aria-label="Send a message to Suraj Thakur"
-        >
-          <span>Send a Message</span>
-          <span className="arrow-icon">↗</span>
-        </button>
-      </div>
-
-      {/* Social Links Row */}
-      <div className="contact-socials" aria-label="Social Links">
-        {siteConfig.socialLinks.map((social) => (
-          <a
-            key={social.id}
-            href={social.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="contact-social-btn"
-            aria-label={social.ariaLabel}
-            title={social.name}
+    <div
+      className="contact-modal-backdrop"
+      onClick={handleBackdropClick}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="contact-modal-heading"
+      ref={modalRef}
+    >
+      <div className="contact-modal-card">
+        {/* Modal Header */}
+        <div className="contact-modal-header">
+          <div className="contact-modal-heading-wrap">
+            <span className="contact-modal-sub">GET IN TOUCH</span>
+            <h3 id="contact-modal-heading" className="contact-modal-title">
+              Let’s Start a Project<span className="yellow-dot">.</span>
+            </h3>
+          </div>
+          <button
+            type="button"
+            className="modal-close-btn"
+            onClick={handleClose}
+            aria-label="Close contact modal"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3m1.4 9.74v-8.37H5.06v8.37h2.8z" />
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
+          </button>
+        </div>
+
+        {/* Direct Email Pill */}
+        <div className="contact-email-pill">
+          <span className="email-label">Direct Email:</span>
+          <a href={`mailto:${siteConfig.email}`} className="email-address-link">
+            {siteConfig.email}
           </a>
-        ))}
+        </div>
+
+        {/* Inquiry Form */}
+        <form onSubmit={handleSubmit} className="contact-form">
+          <div className="form-group">
+            <label htmlFor="contact-name" className="form-label">
+              Your Name *
+            </label>
+            <input
+              id="contact-name"
+              name="name"
+              type="text"
+              required
+              className="form-input"
+              placeholder="e.g. Alex Morgan"
+              value={formData.name}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="contact-email" className="form-label">
+              Your Email Address *
+            </label>
+            <input
+              id="contact-email"
+              name="email"
+              type="email"
+              required
+              className="form-input"
+              placeholder="alex@studio.com"
+              value={formData.email}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="contact-type" className="form-label">
+              Project Style
+            </label>
+            <select
+              id="contact-type"
+              name="projectType"
+              className="form-select"
+              value={formData.projectType}
+              onChange={handleChange}
+            >
+              <option value="Documentary & Explainer">Documentary & Explainer</option>
+              <option value="Stock Footage & Long-Form">Stock Footage & Long-Form</option>
+              <option value="AI Visuals & Motion Graphics">AI Visuals & Motion Graphics</option>
+              <option value="Commercial / Showreel Edit">Commercial / Showreel Edit</option>
+              <option value="Other Creative Collaboration">Other Creative Collaboration</option>
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="contact-message" className="form-label">
+              Project Details & Timeline *
+            </label>
+            <textarea
+              id="contact-message"
+              name="message"
+              required
+              rows="4"
+              className="form-textarea"
+              placeholder="Tell me about your footage, target delivery date, references, and storytelling goals..."
+              value={formData.message}
+              onChange={handleChange}
+            />
+          </div>
+
+          {/* Action Row */}
+          <div className="contact-modal-actions">
+            <button type="submit" className="btn-primary btn-submit-inquiry">
+              <span>Send via Email Client</span>
+              <span className="arrow-icon">↗</span>
+            </button>
+
+            <button
+              type="button"
+              className="btn-outline btn-copy-inquiry"
+              onClick={handleCopyInquiry}
+            >
+              <span>{isCopied ? '✓ Copied to Clipboard!' : 'Copy Inquiry'}</span>
+            </button>
+          </div>
+
+          {isSubmitted && (
+            <p className="contact-notice">
+              Launching your email client. If it doesn't open automatically, write directly to{' '}
+              <a href={`mailto:${siteConfig.email}`}>
+                <strong>{siteConfig.email}</strong>
+              </a>.
+            </p>
+          )}
+        </form>
       </div>
     </div>
   )

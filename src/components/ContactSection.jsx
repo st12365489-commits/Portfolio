@@ -1,29 +1,139 @@
+
 import React from 'react'
 import { siteConfig } from '../data/projects'
 
 export default function ContactSection({ onOpenContact }) {
+  const socialLinks = siteConfig.socialLinks || []
+
+  const linkedin = socialLinks.find((social) =>
+    /linkedin/i.test(`${social.name} ${social.url}`)
+  )
+
+  const instagram = socialLinks.find((social) =>
+    /instagram/i.test(`${social.name} ${social.url}`)
+  )
+
+  const contacts = [
+    {
+      id: 'email',
+      label: 'Email',
+      value: 'st12365489@gmail.com',
+      href: 'mailto:st12365489@gmail.com',
+      icon: '✉',
+    },
+    ...(linkedin
+      ? [{
+        id: 'linkedin',
+        label: 'LinkedIn',
+        value: linkedin.url.replace(/^https?:\/\//, '').replace(/\/$/, ''),
+        href: linkedin.url,
+        icon: 'in',
+      }]
+      : []),
+    {
+      id: 'phone',
+      label: 'Phone',
+      value: '+91 7080933710',
+      href: 'tel:+917080933710',
+      icon: '☎',
+    },
+    ...(instagram
+      ? [{
+        id: 'instagram',
+        label: 'Instagram',
+        value: instagram.url.replace(/^https?:\/\//, '').replace(/\/$/, ''),
+        href: instagram.url,
+        icon: '◎',
+      }]
+      : []),
+  ]
+
   return (
-    <div id="contact" className="contact-block" aria-label="Contact Section">
-      {/* Hand-drawn yellow accent strokes above heading */}
-      <div className="contact-accents" aria-hidden="true">
-        <svg viewBox="0 0 60 20" width="50" height="18" fill="none">
-          <path d="M 8 16 L 36 4" stroke="#F7B62D" strokeWidth="3.5" strokeLinecap="round" />
-          <path d="M 22 18 L 48 6" stroke="#F7B62D" strokeWidth="3" strokeLinecap="round" />
-        </svg>
+    <section
+      id="contact"
+      className="contact-block"
+      aria-label="Contact Section"
+    >
+      <div className="contact-intro">
+        <div className="contact-accents" aria-hidden="true">
+          <svg viewBox="0 0 60 20" width="50" height="18" fill="none">
+            <path
+              d="M 8 16 L 36 4"
+              stroke="#F7B62D"
+              strokeWidth="3.5"
+              strokeLinecap="round"
+            />
+            <path
+              d="M 22 18 L 48 6"
+              stroke="#F7B62D"
+              strokeWidth="3"
+              strokeLinecap="round"
+            />
+          </svg>
+        </div>
+
+        <h3 className="contact-heading">
+          Let’s
+          <br />
+          Work Together<span className="yellow-dot">.</span>
+        </h3>
+
+        <p className="contact-copy">
+          Have a project in mind or just want to say hello?
+          I’d love to hear from you.
+        </p>
       </div>
 
-      <h3 className="contact-heading">
-        Let’s
-        <br />
-        Work Together<span className="yellow-dot">.</span>
-      </h3>
+      {/* Separate contact information section */}
+      <div className="contact-information">
+        <div className="contact-information-heading">
+          <span className="contact-heading-line" />
+          <h4>GET IN TOUCH</h4>
+        </div>
 
-      <p className="contact-copy">
-        Have a project in mind or just want to say hello? I’d love to hear from you.
-      </p>
+        <div className="contact-information-grid">
+          {contacts.map((contact) => (
+            <a
+              key={contact.id}
+              href={contact.href}
+              className="contact-information-card"
+              aria-label={`${contact.label}: ${contact.value}`}
+              target={
+                contact.id === 'linkedin' ||
+                  contact.id === 'instagram'
+                  ? '_blank'
+                  : undefined
+              }
+              rel={
+                contact.id === 'linkedin' ||
+                  contact.id === 'instagram'
+                  ? 'noopener noreferrer'
+                  : undefined
+              }
+            >
+              <span className="contact-information-icon">
+                {contact.icon}
+              </span>
+              <span className="contact-information-text">
+                <span className="contact-information-label">
+                  {contact.label}
+                </span>
+                <span className="contact-information-value">
+                  {contact.value}
+                </span>
+              </span>
+              <span className="contact-information-arrow" aria-hidden="true">
+                ↗
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
 
-      {/* Primary CTA */}
-      <div className="contact-action-wrap">
+      {/* Final CTA at the end */}
+      <div className="contact-final-cta">
+        <p>Have a project in mind?</p>
+
         <button
           type="button"
           className="btn-primary btn-send-message"
@@ -34,25 +144,6 @@ export default function ContactSection({ onOpenContact }) {
           <span className="arrow-icon">↗</span>
         </button>
       </div>
-
-      {/* Social Links Row */}
-      <div className="contact-socials" aria-label="Social Links">
-        {siteConfig.socialLinks.map((social) => (
-          <a
-            key={social.id}
-            href={social.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="contact-social-btn"
-            aria-label={social.ariaLabel}
-            title={social.name}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3m1.4 9.74v-8.37H5.06v8.37h2.8z" />
-            </svg>
-          </a>
-        ))}
-      </div>
-    </div>
+    </section>
   )
 }

@@ -54,15 +54,27 @@ export default function App() {
         <SelectedProjects onSelectProject={handleOpenProject} />
 
         {/* Editorial Bottom Trio (About Me, Software Tools, Contact) */}
-        <section className="editorial-bottom-section" aria-label="Editor Details and Contact">
+
+        {/* About Me and Software Tools */}
+        <section
+          className="editorial-bottom-section"
+          aria-label="About Me and Software Tools"
+        >
           <div className="container">
             <div className="editorial-bottom-grid">
               <AboutMe onMoreAboutMe={handleOpenContact} />
               <SoftwareTools />
-              <ContactSection onOpenContact={handleOpenContact} />
             </div>
           </div>
         </section>
+
+        {/* Full-width Contact Section below About and Tools */}
+        <div className="contact-section-wrapper">
+          <div className="container">
+            <ContactSection onOpenContact={handleOpenContact} />
+          </div>
+        </div>
+
       </main>
 
       {/* Footer */}
